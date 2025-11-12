@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="br.com.creche.controller.EditarUsuarioController"
+      spacing="12" styleClass="root" prefWidth="500" prefHeight="400">
+
+    <padding>
+        <Insets top="16" right="16" bottom="16" left="16"/>
+    </padding>
+
+    <children>
+        <Label text="Editar Usuário" styleClass="title"/>
+
+        <Label fx:id="lblErro" styleClass="error" visible="false" managed="false"/>
+
+        <VBox spacing="8">
+            <children>
+                <Label text="Nome completo:"/>
+                <TextField fx:id="txtNome" promptText="Digite o nome completo"/>
+            </children>
+        </VBox>
+
+        <VBox spacing="8">
+            <children>
+                <Label text="E-mail:"/>
+                <TextField fx:id="txtEmail" promptText="Digite o e-mail"/>
+            </children>
+        </VBox>
+
+        <VBox spacing="8">
+            <children>
+                <Label text="Nova Senha (deixe vazio para não alterar):"/>
+                <PasswordField fx:id="txtSenha" promptText="Digite a nova senha ou deixe vazio"/>
+            </children>
+        </VBox>
+
+        <VBox spacing="8">
+            <children>
+                <Label text="Perfil:"/>
+                <ComboBox fx:id="cbPerfil" promptText="Selecione o perfil" prefWidth="200"/>
+            </children>
+        </VBox>
+
+        <CheckBox fx:id="chkAtivo" text="Usuário ativo" selected="true"/>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <HBox spacing="8" alignment="CENTER_RIGHT">
+            <children>
+                <Button text="Cancelar" onAction="#onCancelar"/>
+                <Button text="Salvar" onAction="#onSalvar" styleClass="primary"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>

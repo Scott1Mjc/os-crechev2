@@ -77,12 +77,14 @@ public class OrdemServicoRepository {
     }
 
     public void insert(OrdemServico os, Long usuarioId) {
-        String sql = """
+        
+    	String sql = """
             insert into ordens_servico
             (numero, titulo, descricao, categoria, prioridade, status, solicitante, prazo, criado_por, atribuido_para, observacoes)
             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             returning id, data_abertura
         """;
+        
         try (var conn = DB.getConnection();
              var ps = conn.prepareStatement(sql)) {
 
@@ -169,6 +171,30 @@ public class OrdemServicoRepository {
             ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException("Erro ao atualizar O.S.: " + e.getMessage(), e);
+        }
+    }
+
+    public void delete(Long osId) {
+        try (var conn = DB.getConnection()) {
+            conn.setAutoCommit(false);
+
+            // Apagar histórico primeiro (chave estrangeira)
+            String sqlHistorico = "DELETE FROM os_historico WHERE os_id = ?";
+            try (var ps = conn.prepareStatement(sqlHistorico)) {
+                ps.setLong(1, osId);
+                ps.executeUpdate();
+            }
+
+            // Apagar a O.S.
+            String sqlOS = "DELETE FROM ordens_servico WHERE id = ?";
+            try (var ps = conn.prepareStatement(sqlOS)) {
+                ps.setLong(1, osId);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao apagar O.S.: " + e.getMessage(), e);
         }
     }
 }

@@ -5,16 +5,24 @@ import br.com.creche.model.Usuario;
 import br.com.creche.repository.UsuarioRepository;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.net.URL;
 import java.util.List;
 
 public class UsuarioController {
 
-//    @FXML private TextField txtBuscaUsuario;
-//    @FXML private Button btnNovoUsuario;
-//    @FXML private Button btnBuscarUsuario;
+    @FXML private TextField txtBuscaUsuario;
+    @FXML private Button btnNovoUsuario;
+    @FXML private Button btnEditarUsuario;
+    @FXML private Button btnInativarUsuario;
+    @FXML private Button btnBuscarUsuario;
 
     @FXML private TableView<Usuario> tvUsuarios;
     @FXML private TableColumn<Usuario, String> colNome;
@@ -30,13 +38,116 @@ public class UsuarioController {
 
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colPapeis.setCellValueFactory(new PropertyValueFactory<>("papel"));
+        colPapeis.setCellValueFactory(new PropertyValueFactory<>("perfil"));
         colAtivo.setCellValueFactory(new PropertyValueFactory<>("ativo"));
+
+        // Duplo clique na tabela para editar
+        tvUsuarios.setRowFactory(tv -> {
+            TableRow<Usuario> row = new TableRow<>();
+            row.setOnMouseClicked(evt -> {
+                if (evt.getClickCount() == 2 && !row.isEmpty()) {
+                    abrirEditor(row.getItem());
+                }
+            });
+            return row;
+        });
     }
 
     public void carregar() {
         List<Usuario> list = usuarioRepository.find(500);
-
         tvUsuarios.setItems(FXCollections.observableArrayList(list));
+    }
+
+    @FXML
+    public void onBuscar() {
+        String termo = txtBuscaUsuario.getText();
+        
+        if (termo == null || termo.trim().isEmpty()) {
+            // Se campo vazio, carrega todos
+            carregar();
+        } else {
+            // Busca por nome ou email
+            List<Usuario> list = usuarioRepository.findByNomeOrEmail(termo.trim(), 500);
+            tvUsuarios.setItems(FXCollections.observableArrayList(list));
+        }
+    }
+
+    @FXML
+    public void onNovoUsuario() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/novo-usuario.fxml"));
+            Parent root = loader.load();
+
+            NovoUsuarioController controller = loader.getController();
+            controller.setOnSaved(this::carregar);
+
+            Scene scene = new Scene(root);
+            URL css = getClass().getResource("/css/app.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+
+            Stage stage = new Stage();
+            stage.setTitle("Novo Usuário");
+            stage.setScene(scene);
+            stage.initOwner(btnNovoUsuario.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Falha ao abrir formulário: " + e.getMessage()).showAndWait();
+        }
+    }
+
+    @FXML
+    public void onEditarUsuario() {
+        Usuario usuario = tvUsuarios.getSelectionModel().getSelectedItem();
+        if (usuario != null) {
+            abrirEditor(usuario);
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Selecione um usuário na tabela para editar.").showAndWait();
+        }
+    }
+
+    @FXML
+    public void onInativarUsuario() {
+        Usuario usuario = tvUsuarios.getSelectionModel().getSelectedItem();
+        if (usuario != null) {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmar Inativação");
+            confirm.setHeaderText("Deseja realmente inativar este usuário?");
+            confirm.setContentText("Usuário: " + usuario.getNome());
+
+            if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                usuarioRepository.inactivate(usuario.getId());
+                new Alert(Alert.AlertType.INFORMATION, "Usuário inativado com sucesso!").showAndWait();
+                carregar();
+            }
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Selecione um usuário na tabela para inativar.").showAndWait();
+        }
+    }
+
+    private void abrirEditor(Usuario usuario) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/editar-usuario.fxml"));
+            Parent root = loader.load();
+
+            EditarUsuarioController controller = loader.getController();
+            controller.setUsuario(usuario);
+            controller.setOnSaved(this::carregar);
+
+            Scene scene = new Scene(root);
+            URL css = getClass().getResource("/css/app.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+
+            Stage stage = new Stage();
+            stage.setTitle("Editar Usuário - " + usuario.getNome());
+            stage.setScene(scene);
+            stage.initOwner(tvUsuarios.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Falha ao abrir editor: " + e.getMessage()).showAndWait();
+        }
     }
 }

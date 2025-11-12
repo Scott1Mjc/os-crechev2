@@ -1,6 +1,5 @@
 package br.com.creche.controller;
 
-
 import br.com.creche.infra.DB;
 import br.com.creche.model.OrdemServico;
 import br.com.creche.model.Perfil;
@@ -22,7 +21,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -49,18 +47,14 @@ public class DashboardController {
 
     @FXML
     private BorderPane root;
-
     @FXML
     private TextField txtBuscaGlobal;
     @FXML
     private MenuButton mbUser;
-
     @FXML
     private ToggleButton tbDashboard, tbOS, tbUsuarios, tbRelatorios, tbConfiguracoes;
-
     @FXML
     private Label lblKpiAbertas, lblKpiEmAndamento, lblKpiConcluidas, lblKpiAtrasadas;
-
     @FXML
     private TableView<OrdemServico> tvOSRecentes;
     @FXML
@@ -69,12 +63,10 @@ public class DashboardController {
     private TableColumn<OrdemServico, String> colPrioridade;
     @FXML
     private TableColumn<OrdemServico, String> colSolicitante;
-
     @FXML
     private ChoiceBox<String> cbFiltroStatus;
     @FXML
     private Button btnNovaOS;
-
     @FXML
     private PieChart pcStatus;
 
@@ -300,31 +292,11 @@ public class DashboardController {
             return;
         }
 
-        try (Connection conn = DB.getConnection()) {
-            conn.setAutoCommit(false);
-
-            Long osId = selecionada.getId();
-
-            // Apagar histórico primeiro, se necessário
-            try (PreparedStatement psHist = conn.prepareStatement("DELETE FROM os_historico WHERE os_id = ?")) {
-                psHist.setLong(1, osId);
-                psHist.executeUpdate();
-            }
-
-            // Apagar a O.S.
-            try (PreparedStatement psOS = conn.prepareStatement("DELETE FROM ordens_servico WHERE id = ?")) {
-                psOS.setLong(1, osId);
-                psOS.executeUpdate();
-            }
-
-            conn.commit();
-
+        try {
+            repo.delete(selecionada.getId());
             showInfo("O.S. Removida", "A O.S. número " + selecionada.getNumero() + " foi apagada com sucesso.");
-
-            // Atualizar tabela
             carregarDados();
-
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             showError("Erro ao apagar O.S.", ex);
         }
     }

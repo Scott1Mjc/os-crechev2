@@ -28,6 +28,7 @@ public class OSListaController implements DashboardController.RequiresAuthServic
     @FXML private ChoiceBox<String> cbFiltroStatusLista;
     @FXML private TextField txtBuscaOS;
     @FXML private Button btnNovaOSLista;
+    @FXML private Button btnEditarOSLista;
 
     @FXML private TableView<OrdemServico> tvOS;
     @FXML private TableColumn<OrdemServico, String> colNumero;
@@ -118,18 +119,14 @@ public class OSListaController implements DashboardController.RequiresAuthServic
                     .collect(Collectors.toList());
         }
 
-        // busca texto
+        // busca texto - apenas por número ou título
         String q = txtBuscaOS.getText();
         if (q != null && !q.trim().isEmpty()) {
             String term = q.trim().toLowerCase(Locale.ROOT);
             list = list.stream().filter(o -> {
                 String numero = safe(o.getNumero());
                 String titulo = safe(o.getTitulo());
-                String categoria = safe(o.getCategoria());
-                String solicitante = safe(o.getSolicitante());
-                String responsavel = safe(o.getAtribuidoPara().toString());
-                return numero.contains(term) || titulo.contains(term) || categoria.contains(term)
-                        || solicitante.contains(term) || responsavel.contains(term);
+                return numero.contains(term) || titulo.contains(term);
             }).collect(Collectors.toList());
         }
 
@@ -187,6 +184,16 @@ public class OSListaController implements DashboardController.RequiresAuthServic
         } catch (Exception e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Falha ao abrir Nova O.S.: " + e.getMessage()).showAndWait();
+        }
+    }
+
+    @FXML
+    public void onEditarOS() {
+        OrdemServico os = tvOS.getSelectionModel().getSelectedItem();
+        if (os != null) {
+            abrirEditor(os);
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Selecione uma Ordem de Serviço na tabela para editar.").showAndWait();
         }
     }
 }

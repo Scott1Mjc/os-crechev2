@@ -13,7 +13,9 @@
             <children>
                 <Label text="Usuários" styleClass="app-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="Novo Usuário" fx:id="btnNovoUsuario"/>
+                <Button text="Inativar Usuário" fx:id="btnInativarUsuario" styleClass="danger" onAction="#onInativarUsuario"/>
+                <Button text="Editar Usuário" fx:id="btnEditarUsuario" onAction="#onEditarUsuario"/>
+                <Button text="Novo Usuário" fx:id="btnNovoUsuario" onAction="#onNovoUsuario"/>
             </children>
             <padding>
                 <Insets top="8" right="16" bottom="8" left="16"/>
@@ -29,8 +31,8 @@
             <children>
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <children>
-                        <TextField fx:id="txtBuscaUsuario" promptText="Buscar por nome ou e-mail..." HBox.hgrow="ALWAYS"/>
-                        <Button text="Buscar" fx:id="btnBuscarUsuario"/>
+                        <TextField fx:id="txtBuscaUsuario" promptText="Buscar por nome ou e-mail..." onAction="#onBuscar" HBox.hgrow="ALWAYS"/>
+                        <Button text="Buscar" fx:id="btnBuscarUsuario" onAction="#onBuscar"/>
                     </children>
                 </HBox>
 

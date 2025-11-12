@@ -14,6 +14,7 @@
             <children>
                 <Label text="Ordens de Serviço" styleClass="app-title"/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Editar O.S." fx:id="btnEditarOSLista" onAction="#onEditarOS"/>
                 <Button text="Nova O.S." fx:id="btnNovaOSLista" onAction="#onNovaOS"/>
             </children>
             <padding>
@@ -32,7 +33,7 @@
                     <children>
                         <Label text="Status:"/>
                         <ChoiceBox fx:id="cbFiltroStatusLista" prefWidth="180"/>
-                        <TextField fx:id="txtBuscaOS" promptText="Buscar por número, título, categoria, solicitante, responsável..." HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="txtBuscaOS" promptText="Buscar OS por número ou título..." onAction="#onBuscar" HBox.hgrow="ALWAYS"/>
                         <Button text="Buscar" fx:id="btnBuscarOS" onAction="#onBuscar"/>
                     </children>
                 </HBox>
