@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 import java.util.prefs.Preferences;
 
@@ -21,11 +23,18 @@ public class LoginController {
     @FXML private CheckBox chkLembrar;
     @FXML private Button btnEntrar;
     @FXML private Label lblErro;
+    @FXML private TextField txtSenhaVisivel;
+    @FXML private ImageView btnMostrarSenha;
+    @FXML private ImageView btnOcultarSenha;
+
+    private boolean senhaVisivel = false;
 
     private final AuthService authService = new AuthService();
 
     @FXML
     public void initialize() {
+        txtSenhaVisivel.setVisible(false);
+        btnOcultarSenha.setVisible(false);
         if (!br.com.creche.infra.DBHealth.testConnection()) {
             lblErro.setText("Sem conexão com o banco. Verifique as credenciais.");
             lblErro.setVisible(true);
@@ -73,6 +82,30 @@ public class LoginController {
                 e.printStackTrace();
                 showError("Erro ao decifrar senha armazenada.");
             }
+        }
+    }
+
+    @FXML
+    // Configura o botão de visualizar senha
+    private void toggleMostrarSenha() {
+        senhaVisivel = !senhaVisivel;
+
+        if (senhaVisivel) {
+            txtSenhaVisivel.setText(txtSenha.getText());
+            txtSenhaVisivel.setVisible(true);
+            txtSenha.setVisible(false);
+
+            btnMostrarSenha.setImage(
+                    new Image(getClass().getResourceAsStream("/images/olho-cruzado.png"))
+            );
+        } else {
+            txtSenha.setText(txtSenhaVisivel.getText());
+            txtSenha.setVisible(true);
+            txtSenhaVisivel.setVisible(false);
+
+            btnMostrarSenha.setImage(
+                    new Image(getClass().getResourceAsStream("/images/olho.png"))
+            );
         }
     }
 
