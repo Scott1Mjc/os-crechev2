@@ -11,7 +11,13 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <javafx.version>17.0.11</javafx.version>
+
+        <!-- ENCODING CORRETO -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <file.encoding>UTF-8</file.encoding>
     </properties>
+
 
     <dependencies>
         <!-- JavaFX (coloque apenas os módulos que vai usar) -->

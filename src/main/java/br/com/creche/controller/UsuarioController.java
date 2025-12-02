@@ -12,25 +12,23 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.util.List;
+import br.com.creche.ui.ThemeManager;
+import br.com.creche.ui.SceneFactory;
 
 public class UsuarioController {
 
-    @FXML private TextField txtBuscaUsuario;
-    @FXML private Button btnNovoUsuario;
-    @FXML private Button btnEditarUsuario;
-    @FXML private Button btnInativarUsuario;
-    @FXML private Button btnBuscarUsuario;
+    @FXML
+    private TextField txtBuscaUsuario;
+    @FXML
+    private Button btnNovoUsuario, btnExcluirUsuario, btnInativarUsuario, btnBuscarUsuario, btnEditarUsuario;
+    @FXML
+    private TableView<Usuario> tvUsuarios;
+    @FXML
+    private TableColumn<Usuario, String> colNome, colEmail, colPapeis, colAtivo;
 
-    @FXML private TableView<Usuario> tvUsuarios;
-    @FXML private TableColumn<Usuario, String> colNome;
-    @FXML private TableColumn<Usuario, String> colEmail;
-    @FXML private TableColumn<Usuario, String> colPapeis;
-    @FXML private TableColumn<Usuario, String> colAtivo;
-
-    private UsuarioRepository usuarioRepository = new UsuarioRepository();
+    private final UsuarioRepository usuarioRepository = new UsuarioRepository();
 
     @FXML
     public void initialize() {
@@ -81,9 +79,7 @@ public class UsuarioController {
             NovoUsuarioController controller = loader.getController();
             controller.setOnSaved(this::carregar);
 
-            Scene scene = new Scene(root);
-            URL css = getClass().getResource("/css/app.css");
-            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+            Scene scene = SceneFactory.createScene(root);
 
             Stage stage = new Stage();
             stage.setTitle("Novo Usuário");
@@ -104,6 +100,25 @@ public class UsuarioController {
             abrirEditor(usuario);
         } else {
             new Alert(Alert.AlertType.WARNING, "Selecione um usuário na tabela para editar.").showAndWait();
+        }
+    }
+
+    @FXML
+    public void onExcluirUsuario(){
+        Usuario usuario = tvUsuarios.getSelectionModel().getSelectedItem();
+        if (usuario != null) {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirmar Exclusão?");
+            confirm.setHeaderText("Deseja realmente excluir este usuário?");
+            confirm.setContentText("Usuário: " + usuario.getNome() + "\n\nEsta ação é permanente.");
+
+            if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                usuarioRepository.delete(usuario.getId());
+                new Alert(Alert.AlertType.INFORMATION, "Usuário excluido com sucesso!").showAndWait();
+                carregar();
+            }
+        } else {
+            new Alert(Alert.AlertType.WARNING, "Selecione um usuário na tabela para excluir.").showAndWait();
         }
     }
 
@@ -135,9 +150,7 @@ public class UsuarioController {
             controller.setUsuario(usuario);
             controller.setOnSaved(this::carregar);
 
-            Scene scene = new Scene(root);
-            URL css = getClass().getResource("/css/app.css");
-            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+            Scene scene = SceneFactory.createScene(root);
 
             Stage stage = new Stage();
             stage.setTitle("Editar Usuário - " + usuario.getNome());

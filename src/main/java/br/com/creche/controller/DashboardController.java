@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 public class DashboardController {
 
     private AuthService authService;
-
     private javafx.scene.Node dashboardCenterOriginal;
 
     public void setAuthService(AuthService authService) {
@@ -54,21 +53,21 @@ public class DashboardController {
     @FXML
     private ToggleButton tbDashboard, tbOS, tbUsuarios, tbRelatorios, tbConfiguracoes;
     @FXML
-    private Label lblKpiAbertas, lblKpiEmAndamento, lblKpiConcluidas, lblKpiAtrasadas;
+    private Label lblKpiAbertas, lblKpiEmAndamento, lblKpiConcluidas, lblKpiAtrasadas, telaAtual;
     @FXML
     private TableView<OrdemServico> tvOSRecentes;
     @FXML
-    private TableColumn<OrdemServico, String> colNumero, colTitulo, colCategoria, colResponsavel, colStatus, colPrazo;
+    private TableColumn<OrdemServico, String> colNumero, colTitulo, colCategoria, colResponsavel;
     @FXML
-    private TableColumn<OrdemServico, String> colPrioridade;
-    @FXML
-    private TableColumn<OrdemServico, String> colSolicitante;
+    private TableColumn<OrdemServico, String> colStatus, colPrazo, colPrioridade, colSolicitante;
     @FXML
     private ChoiceBox<String> cbFiltroStatus;
     @FXML
     private Button btnNovaOS;
     @FXML
     private PieChart pcStatus;
+
+
 
     private final OrdemServicoRepository repo = new OrdemServicoRepository();
     private final DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // prazo só data
@@ -199,30 +198,35 @@ public class DashboardController {
     public void goDashboard() {
         selecionarMenu(tbDashboard);
         root.setCenter(dashboardCenterOriginal);
+        telaAtual.setText("Dashboard");
     }
 
     @FXML
     public void goOS() {
         selecionarMenu(tbOS);
         setCenterCached("/fxml/os-lista.fxml");
+        telaAtual.setText("Editar/Incluir Ordem de Serviço");
     }
 
     @FXML
     public void goUsuarios() {
         selecionarMenu(tbUsuarios);
         setCenterCached("/fxml/usuarios.fxml");
+        telaAtual.setText("Editar/Incluir Usuário");
     }
 
     @FXML
     public void goRelatorios() {
         selecionarMenu(tbRelatorios);
         setCenterCached("/fxml/relatorios.fxml");
+        telaAtual.setText("Relatórios");
     }
 
     @FXML
     public void goConfiguracoes() {
         selecionarMenu(tbConfiguracoes);
         setCenterCached("/fxml/configuracoes.fxml");
+        telaAtual.setText("Configurações");
     }
 
     private void setCenterCached(String fxmlPath) {

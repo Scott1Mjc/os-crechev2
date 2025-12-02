@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 import java.util.prefs.Preferences;
 
@@ -19,6 +20,8 @@ public class ConfiguracoesController implements DashboardController.RequiresAuth
     private ChoiceBox<String> cbIdioma;
     @FXML
     private CheckBox chkEmail;
+    @FXML
+    private Text txtSalvoSucesso;
 
     private static final String PREFS_NODE = "br.com.creche";
     private static final String PREF_TEMA = "tema"; // SISTEMA|CLARO|ESCURO
@@ -29,12 +32,9 @@ public class ConfiguracoesController implements DashboardController.RequiresAuth
     public void initialize() {
         cbTema.setItems(FXCollections.observableArrayList("Sistema", "Claro", "Escuro"));
         carregarPreferencias();
-
-        // aplica imediatamente ao trocar
+        // corrigido erro em que a o tema alterava antes de clicar no botão aplicar
         cbTema.getSelectionModel().selectedItemProperty().addListener((obs, o, n) -> {
             temaSelecionado = map(n);
-            aplicarTemaNaCenaAtual();
-            salvarPreferencias();
         });
     }
 
@@ -56,7 +56,6 @@ public class ConfiguracoesController implements DashboardController.RequiresAuth
         String tema = prefs.get(PREF_TEMA, "SISTEMA");
         temaSelecionado = ThemeManager.Theme.valueOf(tema);
         cbTema.getSelectionModel().select(unmap(temaSelecionado));
-        aplicarTemaNaCenaAtual();
     }
 
     private void salvarPreferencias() {

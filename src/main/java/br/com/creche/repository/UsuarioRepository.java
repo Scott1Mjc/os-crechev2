@@ -167,6 +167,20 @@ public class UsuarioRepository {
         }
     }
 
+    public void delete(Long usuarioId) {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+
+        try (var conn = DB.getConnection();
+             var ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, usuarioId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao excluir usuário: " + e.getMessage(), e);
+        }
+    }
+
+
     public void inactivate(Long usuarioId) {
         String sql = "update usuarios set ativo = false, atualizado_em = now() where id = ?";
 

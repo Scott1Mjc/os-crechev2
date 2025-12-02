@@ -1,6 +1,7 @@
 package br.com.creche.controller;
 
 import br.com.creche.model.OrdemServico;
+
 import br.com.creche.model.Perfil;
 import br.com.creche.model.Usuario;
 import br.com.creche.repository.OrdemServicoRepository;
@@ -15,6 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import br.com.creche.ui.ThemeManager;
+import br.com.creche.ui.SceneFactory;
 
 import java.net.URL;
 import java.time.OffsetDateTime;
@@ -25,20 +28,18 @@ import java.util.stream.Collectors;
 
 public class OSListaController implements DashboardController.RequiresAuthService {
 
-    @FXML private ChoiceBox<String> cbFiltroStatusLista;
-    @FXML private TextField txtBuscaOS;
-    @FXML private Button btnNovaOSLista;
-    @FXML private Button btnEditarOSLista;
-
-    @FXML private TableView<OrdemServico> tvOS;
-    @FXML private TableColumn<OrdemServico, String> colNumero;
-    @FXML private TableColumn<OrdemServico, String> colTitulo;
-    @FXML private TableColumn<OrdemServico, String> colCategoria;
-    @FXML private TableColumn<OrdemServico, String> colSolicitante;
-    @FXML private TableColumn<OrdemServico, String> colResponsavel;
-    @FXML private TableColumn<OrdemServico, String> colPrioridade;
-    @FXML private TableColumn<OrdemServico, String> colStatus;
-    @FXML private TableColumn<OrdemServico, String> colPrazo;
+    @FXML
+    private ChoiceBox<String> cbFiltroStatusLista;
+    @FXML
+    private TextField txtBuscaOS;
+    @FXML
+    private Button btnNovaOSLista, btnEditarOSLista;
+    @FXML
+    private TableView<OrdemServico> tvOS;
+    @FXML
+    private TableColumn<OrdemServico, String> colNumero, colTitulo, colResponsavel, colSolicitante;
+    @FXML
+    private TableColumn<OrdemServico, String> colCategoria, colPrioridade, colStatus, colPrazo;
 
     private final OrdemServicoRepository repo = new OrdemServicoRepository();
     private final DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -145,9 +146,7 @@ public class OSListaController implements DashboardController.RequiresAuthServic
             controller.setOrdemServico(os);
             controller.setOnSaved(this::carregar);
 
-            Scene scene = new Scene(root);
-            URL css = getClass().getResource("/css/app.css");
-            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+            Scene scene = SceneFactory.createScene(root);
 
             Stage stage = new Stage();
             stage.setTitle("Editar O.S. - " + os.getNumero());
@@ -171,9 +170,7 @@ public class OSListaController implements DashboardController.RequiresAuthServic
             NovaOSController controller = loader.getController();
             controller.setAuthService(this.authService);
 
-            Scene scene = new Scene(root);
-            URL css = getClass().getResource("/css/app.css");
-            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+            Scene scene = SceneFactory.createScene(root);
 
             Stage stage = new Stage();
             stage.setTitle("Nova Ordem de Serviço");

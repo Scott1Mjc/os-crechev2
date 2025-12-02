@@ -4,18 +4,28 @@ import br.com.creche.model.Usuario;
 import br.com.creche.repository.UsuarioRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
+import br.com.creche.ui.ThemeManager;
 
 public class EditarUsuarioController {
 
-    @FXML private TextField txtNome;
-    @FXML private TextField txtEmail;
-    @FXML private PasswordField txtSenha;
-    @FXML private ComboBox<String> cbPerfil;
-    @FXML private CheckBox chkAtivo;
-    @FXML private Label lblErro;
+    @FXML
+    private TextField txtNome, txtEmail, txtSenhaVisivel;
+    @FXML
+    private PasswordField txtSenha;
+    @FXML
+    private ComboBox<String> cbPerfil;
+    @FXML
+    private CheckBox chkAtivo;
+    @FXML
+    private Label lblErro;
+    @FXML
+    private ImageView btnMostrarSenha, btnOcultarSenha;
 
+    private boolean senhaVisivel = false;
     private final UsuarioRepository repository = new UsuarioRepository();
     private Usuario usuario;
     private Runnable onSaved;
@@ -31,8 +41,34 @@ public class EditarUsuarioController {
 
     @FXML
     public void initialize() {
+        txtSenhaVisivel.setVisible(false);
+        btnOcultarSenha.setVisible(false);
         // Carregar perfis disponíveis
         cbPerfil.getItems().addAll("ADMIN", "GESTOR", "OPERADOR");
+    }
+
+    // Configura o botão de visualizar senha
+    @FXML
+    private void toggleMostrarSenha() {
+        senhaVisivel = !senhaVisivel;
+
+        if (senhaVisivel) {
+            txtSenhaVisivel.setText(txtSenha.getText());
+            txtSenhaVisivel.setVisible(true);
+            txtSenha.setVisible(false);
+
+            btnMostrarSenha.setImage(
+                    new Image(getClass().getResourceAsStream("/images/olho-cruzado.png"))
+            );
+        } else {
+            txtSenha.setText(txtSenhaVisivel.getText());
+            txtSenha.setVisible(true);
+            txtSenhaVisivel.setVisible(false);
+
+            btnMostrarSenha.setImage(
+                    new Image(getClass().getResourceAsStream("/images/olho.png"))
+            );
+        }
     }
 
     private void preencherCampos() {

@@ -6,9 +6,11 @@ import br.com.creche.service.AuthService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Region;
+import br.com.creche.ui.ThemeManager;
 
 import java.sql.*;
 import java.time.*;
@@ -18,38 +20,19 @@ import java.util.Optional;
 public class NovaOSController {
 
     @FXML
-    private TextField txtNumero;
+    private TextField txtNumero, txtTitulo, txtSolicitante;
     @FXML
-    private ComboBox<String> cbCategoria;
-    @FXML
-    private TextField txtTitulo;
-    @FXML
-    private TextField txtSolicitante;
-    @FXML
-    private TextArea txtDescricao;
-    @FXML
-    private ComboBox<String> cbPrioridade;
-    @FXML
-    private ComboBox<String> cbStatus;
+    private ComboBox<String> cbCategoria, cbPrioridade, cbStatus;
     @FXML
     private ComboBox<UsuarioItem> cbAtribuidoPara;
     @FXML
     private DatePicker dpPrazo;
+    @FXML
+    private TextArea txtObservacoes, txtDescricao;
+    @FXML
+    private Button btnSalvar, btnSalvarRodape, btnCancelar, btnLimpar, btnVoltar;
 
-    @FXML
-    private TextArea txtObservacoes;
-
-    @FXML
-    private Button btnSalvar;
-    @FXML
-    private Button btnSalvarRodape;
-    @FXML
-    private Button btnCancelar;
-    @FXML
-    private Button btnLimpar;
-    @FXML
-    private Button btnVoltar;
-
+    private ThemeManager.Theme temaSelecionado = ThemeManager.Theme.SISTEMA;
     private Runnable onSaved;
 
     // Injetado pelo chamador (ex: Dashboard) após carregar o FXML

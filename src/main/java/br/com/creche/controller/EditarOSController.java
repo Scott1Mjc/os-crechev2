@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import br.com.creche.ui.ThemeManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,17 +24,18 @@ import java.util.Optional;
 
 public class EditarOSController {
 
-    @FXML private TextField txtNumero;
-    @FXML private TextField txtTitulo;
-    @FXML private TextArea txtDescricao;
-    @FXML private ComboBox<String> cbCategoria;
-    @FXML private ComboBox<String> cbPrioridade;
-    @FXML private ComboBox<String> cbStatus;
-    @FXML private ComboBox<UsuarioItem> cbAtribuidoPara;
-    @FXML private TextField txtSolicitante;
-    @FXML private DatePicker dpPrazo; // apenas DatePicker
-    @FXML private TextArea txtObservacoes;
-    @FXML private Label lblErro;
+    @FXML
+    private TextField txtNumero, txtTitulo, txtSolicitante;
+    @FXML
+    private TextArea txtDescricao, txtObservacoes;
+    @FXML
+    private ComboBox<String> cbCategoria, cbPrioridade, cbStatus;
+    @FXML
+    private ComboBox<UsuarioItem> cbAtribuidoPara;
+    @FXML
+    private DatePicker dpPrazo; // apenas DatePicker
+    @FXML
+    private Label lblErro;
 
     private final OrdemServicoRepository repo = new OrdemServicoRepository();
     private AuthService authService;

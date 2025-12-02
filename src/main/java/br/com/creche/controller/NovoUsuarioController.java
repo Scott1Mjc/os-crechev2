@@ -1,21 +1,31 @@
 package br.com.creche.controller;
 
 import br.com.creche.model.Usuario;
+import br.com.creche.ui.ThemeManager;
 import br.com.creche.repository.UsuarioRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 public class NovoUsuarioController {
 
-    @FXML private TextField txtNome;
-    @FXML private TextField txtEmail;
-    @FXML private PasswordField txtSenha;
-    @FXML private ComboBox<String> cbPerfil;
-    @FXML private CheckBox chkAtivo;
-    @FXML private Label lblErro;
+    @FXML
+    private TextField txtNome, txtEmail, txtSenhaVisivel;
+    @FXML
+    private PasswordField txtSenha;
+    @FXML
+    private ComboBox<String> cbPerfil;
+    @FXML
+    private CheckBox chkAtivo;
+    @FXML
+    private Label lblErro;
+    @FXML
+    private ImageView btnMostrarSenha, btnOcultarSenha;
 
+    private boolean senhaVisivel = false;
     private final UsuarioRepository repository = new UsuarioRepository();
     private Runnable onSaved;
 
@@ -25,9 +35,35 @@ public class NovoUsuarioController {
 
     @FXML
     public void initialize() {
+        txtSenhaVisivel.setVisible(false);
+        btnOcultarSenha.setVisible(false);
         // Carregar perfis disponíveis
         cbPerfil.getItems().addAll("ADMIN", "GESTOR", "OPERADOR");
         cbPerfil.getSelectionModel().selectFirst();
+    }
+
+    // Configura o botão de visualizar senha
+    @FXML
+    private void toggleMostrarSenha() {
+        senhaVisivel = !senhaVisivel;
+
+        if (senhaVisivel) {
+            txtSenhaVisivel.setText(txtSenha.getText());
+            txtSenhaVisivel.setVisible(true);
+            txtSenha.setVisible(false);
+
+            btnMostrarSenha.setImage(
+                    new Image(getClass().getResourceAsStream("/images/olho-cruzado.png"))
+            );
+        } else {
+            txtSenha.setText(txtSenhaVisivel.getText());
+            txtSenha.setVisible(true);
+            txtSenhaVisivel.setVisible(false);
+
+            btnMostrarSenha.setImage(
+                    new Image(getClass().getResourceAsStream("/images/olho.png"))
+            );
+        }
     }
 
     @FXML

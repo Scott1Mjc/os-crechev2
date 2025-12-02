@@ -18,14 +18,19 @@ import java.util.prefs.Preferences;
 
 public class LoginController {
 
-    @FXML private TextField txtEmail;
-    @FXML private PasswordField txtSenha;
-    @FXML private CheckBox chkLembrar;
-    @FXML private Button btnEntrar;
-    @FXML private Label lblErro;
-    @FXML private TextField txtSenhaVisivel;
-    @FXML private ImageView btnMostrarSenha;
-    @FXML private ImageView btnOcultarSenha;
+    @FXML
+    private TextField txtEmail, txtSenhaVisivel;
+    @FXML
+    private PasswordField txtSenha;
+    @FXML
+    private CheckBox chkLembrar;
+    @FXML
+    private Button btnEntrar;
+    @FXML
+    private Label lblErro;
+    @FXML
+    private ImageView btnMostrarSenha, btnOcultarSenha;
+
 
     private boolean senhaVisivel = false;
 
@@ -85,8 +90,8 @@ public class LoginController {
         }
     }
 
-    @FXML
     // Configura o botão de visualizar senha
+    @FXML
     private void toggleMostrarSenha() {
         senhaVisivel = !senhaVisivel;
 
@@ -140,7 +145,7 @@ public class LoginController {
 
                 abrirDashboard();
             } else {
-                showError("Credenciais inválidas.");
+                showError("Credenciais invalidas.");
             }
         } catch (Exception ex) {
             ex.printStackTrace(); // LOG no console

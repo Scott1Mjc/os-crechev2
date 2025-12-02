@@ -1,58 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="br.com.creche.controller.EditarUsuarioController"
-      spacing="12" styleClass="root" prefWidth="500" prefHeight="400">
+<VBox prefHeight="400" prefWidth="500" spacing="12" styleClass="root" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="br.com.creche.controller.EditarUsuarioController">
 
     <padding>
-        <Insets top="16" right="16" bottom="16" left="16"/>
+        <Insets bottom="16" left="16" right="16" top="16" />
     </padding>
 
     <children>
-        <Label text="Editar Usuário" styleClass="title"/>
+        <Label styleClass="title" text="Editar Usuário" />
 
-        <Label fx:id="lblErro" styleClass="error" visible="false" managed="false"/>
+                    <Label fx:id="lblErro" managed="false" styleClass="error" visible="false" />
+          <Label text="Nome completo:" />
 
-        <VBox spacing="8">
+                    <VBox spacing="8">
             <children>
-                <Label text="Nome completo:"/>
-                <TextField fx:id="txtNome" promptText="Digite o nome completo"/>
+                <TextField fx:id="txtNome" prefHeight="30.0" prefWidth="470.0" promptText="Digite o nome completo" />
+            </children>
+        </VBox>
+          <Label text="E-mail:" />
+
+                    <VBox spacing="8">
+            <children>
+                <TextField fx:id="txtEmail" prefHeight="30.0" prefWidth="470.0" promptText="Digite o e-mail" />
+            </children>
+        </VBox>
+          <Label text="Nova senha (deixe vazio para não alterar):" />
+      <StackPane alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="468.0">
+         <children>
+            <TextField fx:id="txtSenhaVisivel" prefHeight="30.0" prefWidth="470.0" promptText="Digite a senha" visible="false" />
+                <PasswordField fx:id="txtSenha" prefHeight="30.0" prefWidth="470.0" promptText="Digite a nova senha ou deixe vazio" />
+            <ImageView fx:id="btnOcultarSenha" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../images/olho-cruzado.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="btnMostrarSenha" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#toggleMostrarSenha" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/olho.png" />
+               </image>
+            </ImageView>
+         </children>
+      </StackPane>
+
+                    <VBox spacing="8">
+            <children>
+                <Label text="Perfil:" />
+                <ComboBox fx:id="cbPerfil" prefWidth="200" promptText="Selecione o perfil" />
             </children>
         </VBox>
 
-        <VBox spacing="8">
+                    <CheckBox fx:id="chkAtivo" selected="true" text="Usuário ativo" />
+
+                    <Region VBox.vgrow="ALWAYS" />
+
+                    <HBox alignment="CENTER_RIGHT" spacing="8">
             <children>
-                <Label text="E-mail:"/>
-                <TextField fx:id="txtEmail" promptText="Digite o e-mail"/>
-            </children>
-        </VBox>
-
-        <VBox spacing="8">
-            <children>
-                <Label text="Nova Senha (deixe vazio para não alterar):"/>
-                <PasswordField fx:id="txtSenha" promptText="Digite a nova senha ou deixe vazio"/>
-            </children>
-        </VBox>
-
-        <VBox spacing="8">
-            <children>
-                <Label text="Perfil:"/>
-                <ComboBox fx:id="cbPerfil" promptText="Selecione o perfil" prefWidth="200"/>
-            </children>
-        </VBox>
-
-        <CheckBox fx:id="chkAtivo" text="Usuário ativo" selected="true"/>
-
-        <Region VBox.vgrow="ALWAYS"/>
-
-        <HBox spacing="8" alignment="CENTER_RIGHT">
-            <children>
-                <Button text="Cancelar" onAction="#onCancelar"/>
-                <Button text="Salvar" onAction="#onSalvar" styleClass="primary"/>
+                <Button onAction="#onCancelar" text="Cancelar" />
+                <Button onAction="#onSalvar" styleClass="primary" text="Salvar" />
             </children>
         </HBox>
     </children>
